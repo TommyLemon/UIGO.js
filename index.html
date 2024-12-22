@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UIGO Web - 商品列表</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="src/ui/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .filter {
+            margin-bottom: 20px;
+        }
+        .filter select {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .product-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+        }
+        .product-item img {
+            max-width: 100%;
+            height: auto;
+        }
+        .product-item h3 {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="搜索商品..." />
+        </div>
+        <div class="filter">
+            <label for="category">分类:</label>
+            <select id="category">
+                <option value="all">所有</option>
+                <option value="electronics">电子产品</option>
+                <option value="clothing">服装</option>
+                <option value="books">书籍</option>
+            </select>
+        </div>
+        <div id="productListPage" class="page">
+            <div class="product-list" id="productList">
+                <!-- 示例商品 -->
+                <div class="product-item" data-category="electronics" >
+                    <img src="https://via.placeholder.com/150" alt="Product 1">
+                    <h3>电子产品 1</h3>
+                    <p>价格: $100</p>
+                </div>
+                <div class="product-item" data-category="clothing">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <h3>服装 1</h3>
+                    <p>价格: $50</p>
+                </div>
+                <div class="product-item" data-category="books">
+                    <img src="https://via.placeholder.com/150" alt="Product 3">
+                    <h3>书籍 1</h3>
+                    <p>价格: $20</p>
+                </div>
+                <div class="product-item" data-category="electronics">
+                    <img src="https://via.placeholder.com/150" alt="Product 1">
+                    <h3>电子产品 2</h3>
+                    <p>价格: $1100</p>
+                </div>
+                <div class="product-item" data-category="clothing">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <h3>服装 2</h3>
+                    <p>价格: $501</p>
+                </div>
+                <div class="product-item" data-category="books">
+                    <img src="https://via.placeholder.com/150" alt="Product 3">
+                    <h3>书籍 2</h3>
+                    <p>价格: $29.9</p>
+                </div>
+                <div class="product-item" data-category="clothing">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <h3>服装 3</h3>
+                    <p>价格: $50</p>
+                </div>
+                <div class="product-item" data-category="books">
+                    <img src="https://via.placeholder.com/150" alt="Product 3">
+                    <h3>书籍 3</h3>
+                    <p>价格: $20</p>
+                </div>
+                <div class="product-item" data-category="electronics">
+                    <img src="https://via.placeholder.com/150" alt="Product 1">
+                    <h3>电子产品 4</h3>
+                    <p>价格: $1100</p>
+                </div>
+                <div class="product-item" data-category="clothing">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <h3>服装 4</h3>
+                    <p>价格: $501</p>
+                </div>
+                <!-- 示例商品 -->
+                <div class="product-item" data-category="electronics">
+                    <img src="https://via.placeholder.com/150" alt="Product 1">
+                    <h3>电子产品 3</h3>
+                    <p>价格: $100</p>
+                </div>
+                <div class="product-item" data-category="clothing">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <h3>服装 3</h3>
+                    <p>价格: $50</p>
+                </div>
+                <div class="product-item" data-category="books">
+                    <img src="https://via.placeholder.com/150" alt="Product 3">
+                    <h3>书籍 3</h3>
+                    <p>价格: $20</p>
+                </div>
+                <div class="product-item" data-category="electronics">
+                    <img src="https://via.placeholder.com/150" alt="Product 1">
+                    <h3>电子产品 4</h3>
+                    <p>价格: $1100</p>
+                </div>
+                <div class="product-item" data-category="electronics">
+                    <img src="https://via.placeholder.com/150" alt="Product 1">
+                    <h3>电子产品 1</h3>
+                    <p>价格: $100</p>
+                </div>
+                <div class="product-item" data-category="clothing">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <h3>服装 1</h3>
+                    <p>价格: $50</p>
+                </div>
+                <div class="product-item" data-category="books">
+                    <img src="https://via.placeholder.com/150" alt="Product 3">
+                    <h3>书籍 1</h3>
+                    <p>价格: $20</p>
+                </div>
+                <div class="product-item" data-category="electronics">
+                    <img src="https://via.placeholder.com/150" alt="Product 1">
+                    <h3>电子产品 2</h3>
+                    <p>价格: $1100</p>
+                </div>
+                <div class="product-item" data-category="clothing">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <h3>服装 2</h3>
+                    <p>价格: $501</p>
+                </div>
+                <div class="product-item" data-category="books">
+                    <img src="https://via.placeholder.com/150" alt="Product 3">
+                    <h3>书籍 2</h3>
+                    <p>价格: $29.9</p>
+                </div>
+                <div class="product-item" data-category="clothing">
+                    <img src="https://via.placeholder.com/150" alt="Product 2">
+                    <h3>服装 4</h3>
+                    <p>价格: $501</p>
+                </div>
+                <div class="product-item" data-category="books">
+                    <img src="https://via.placeholder.com/150" alt="Product 3">
+                    <h3>书籍 4</h3>
+                    <p>价格: $29.9</p>
+                </div>
+                <!-- 更多商品可以添加在这里 -->
+            </div>
+        </div>
+
+        <div id="productDetailPage" class="page" style="display: none">
+            <button class="back-button" onclick="showProductList()">返回</button>
+            <div class="product-detail">
+                <img id="productImage" class="product-image" src="" alt="Product Image">
+                <div class="product-info">
+                    <h1 id="productTitle"></h1>
+                    <div id="productPrice" class="product-price"></div>
+                    <div id="productCategory" class="product-category"></div>
+                    <div id="productDescription" class="product-description"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/core/elementFinder.js"></script>
+    <script src="src/core/httpInterceptor.js"></script>
+    <script src="src/core/recorder.js"></script>
+    <script src="src/ui/floatingBar.js"></script>
+    <script src="src/index.js"></script>
+    <script>
+        // 等待 UIGO 初始化完成
+        document.addEventListener('DOMContentLoaded', () => {
+            // 开始录制
+            document.querySelector('.uigo-floating-bar button').addEventListener('click', () => {
+                if (window.uigoRecorder) {
+                    window.uigoRecorder.start();
+                }
+            });
+
+            // 简单的搜索和筛选功能
+            document.getElementById('search').addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const products = document.querySelectorAll('.product-item');
+                products.forEach(product => {
+                    const title = product.querySelector('h3').textContent.toLowerCase();
+                    product.style.display = title.includes(query) ? 'block' : 'none';
+                });
+            });
+
+            document.getElementById('category').addEventListener('change', function() {
+                const category = this.value;
+                const products = document.querySelectorAll('.product-item');
+                products.forEach(product => {
+                    const productCategory = product.getAttribute('data-category');
+                    product.style.display = (category === 'all' || productCategory === category) ? 'block' : 'none';
+                });
+            });
+
+            // 在 DOMContentLoaded 事件处理函数中添加
+            const productList = document.getElementById('productList');
+            productList.innerHTML = ''; // 清空现有内容
+            
+            // 生成12个商品
+            const categories = ['electronics', 'clothing', 'books'];
+            for (let i = 1; i <= 12; i++) {
+                const category = categories[Math.floor(Math.random() * categories.length)];
+                const product = document.createElement('div');
+                product.className = 'product-item';
+                product.setAttribute('data-category', category);
+                
+                // 生成商品数据
+                const productData = {
+                    id: i,
+                    title: `${category === 'electronics' ? '电子产品' : category === 'clothing' ? '服装' : '书籍'} ${i}`,
+                    price: Math.floor(Math.random() * 1000),
+                    category: category,
+                    image: 'https://via.placeholder.com/150'
+                };
+                
+                // 修改点击事件为弹窗显示
+                product.onclick = () => {
+                    alert(`商品信息：
+标题：${productData.title}
+价格：$${productData.price}
+分类：${productData.category === 'electronics' ? '电子产品' : 
+                   productData.category === 'clothing' ? '服装' : '书籍'}`);
+                };
+                
+                product.innerHTML = `
+                    <img src="${productData.image}" alt="Product ${i}">
+                    <h3>${productData.title}</h3>
+                    <p>价格: $${productData.price}</p>
+                `;
+                
+                productList.appendChild(product);
+            }
+        });
+
+        function showProductDetail(id) {
+            document.getElementById('productListPage').style.display = 'none';
+            document.getElementById('productDetailPage').style.display = 'block';
+            
+            // 模拟加载商品数据
+            const product = {
+                id: id,
+                title: `${['电子产品', '服装', '书籍'][Math.floor(Math.random() * 3)]} ${id}`,
+                price: '$' + Math.floor(Math.random() * 1000),
+                category: ['电子产品', '服装', '书籍'][Math.floor(Math.random() * 3)],
+                image: 'https://via.placeholder.com/400',
+                description: '这是一个示例商品描述...'
+            };
+            
+            document.getElementById('productTitle').textContent = product.title;
+            document.getElementById('productImage').src = product.image;
+            document.getElementById('productPrice').textContent = '价格: ' + product.price;
+            document.getElementById('productCategory').textContent = '分类: ' + product.category;
+            document.getElementById('productDescription').textContent = product.description;
+        }
+
+        function showProductList() {
+            document.getElementById('productDetailPage').style.display = 'none';
+            document.getElementById('productListPage').style.display = 'block';
+            window.history.pushState(null, '', '/');
+        }
+
+        // 处理浏览器的前进/��退
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.id) {
+                showProductDetail(event.state.id);
+            } else {
+                showProductList();
+            }
+        });
+    </script>
+</body>
+</html> 

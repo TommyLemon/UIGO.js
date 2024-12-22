@@ -1,0 +1,14 @@
+uigo-web/
+  ├── src/
+  │   ├── core/
+  │   │   ├── recorder.js
+  │   │   ├── player.js
+  │   │   ├── elementFinder.js
+  │   │   └── httpInterceptor.js
+  │   ├── ui/
+  │   │   ├── floatingBar.js
+  │   │   ├── floatingBall.js
+  │   │   └── styles.css
+  │   └── index.js
+  ├── index.html
+  └── package.json 

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UIGO Web - 商品详情</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../ui/styles.css">
+    <style>
+        .product-detail {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .product-image {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .product-info {
+            line-height: 1.6;
+        }
+        .product-price {
+            font-size: 24px;
+            color: #e44d26;
+            margin: 20px 0;
+        }
+        .product-category {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="history.back()">返回</button>
+    <div class="product-detail">
+        <img id="productImage" class="product-image" src="" alt="Product Image">
+        <div class="product-info">
+            <h1 id="productTitle"></h1>
+            <div id="productPrice" class="product-price"></div>
+            <div id="productCategory" class="product-category"></div>
+            <div id="productDescription" class="product-description"></div>
+        </div>
+    </div>
+
+    <script src="../core/elementFinder.js"></script>
+    <script src="../core/httpInterceptor.js"></script>
+    <script src="../core/recorder.js"></script>
+    <script src="../ui/floatingBar.js"></script>
+    <script src="../index.js"></script>
+</body>
+</html> 
