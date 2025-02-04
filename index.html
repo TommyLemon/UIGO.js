@@ -211,62 +211,168 @@
             });
 
             // 简单的搜索和筛选功能
-            document.getElementById('search').addEventListener('input', function() {
+            document.getElementById('search').addEventListener('keydown', function(event) {
+                if (event.key != "Enter") {
+                    return;
+                }
+
                 const query = this.value.toLowerCase();
                 const products = document.querySelectorAll('.product-item');
                 products.forEach(product => {
                     const title = product.querySelector('h3').textContent.toLowerCase();
                     product.style.display = title.includes(query) ? 'block' : 'none';
                 });
-            });
 
-            document.getElementById('category').addEventListener('change', function() {
-                const category = this.value;
-                const products = document.querySelectorAll('.product-item');
-                products.forEach(product => {
-                    const productCategory = product.getAttribute('data-category');
-                    product.style.display = (category === 'all' || productCategory === category) ? 'block' : 'none';
-                });
+                loadProducts(query);
             });
+//
+//             document.getElementById('category').addEventListener('change', function() {
+//                 const category = this.value;
+//                 const products = document.querySelectorAll('.product-item');
+//                 products.forEach(product => {
+//                     const productCategory = product.getAttribute('data-category');
+//                     product.style.display = (category === 'all' || productCategory === category) ? 'block' : 'none';
+//                 });
+//             });
+//
+//             // 在 DOMContentLoaded 事件处理函数中添加
+//             const productList = document.getElementById('productList');
+//             productList.innerHTML = ''; // 清空现有内容
+//
+//             // 生成12个商品
+//             const categories = ['electronics', 'clothing', 'books'];
+//             for (let i = 1; i <= 12; i++) {
+//                 const category = categories[Math.floor(Math.random() * categories.length)];
+//                 const product = document.createElement('div');
+//                 product.className = 'product-item';
+//                 product.setAttribute('data-category', category);
+//
+//                 // 生成商品数据
+//                 const productData = {
+//                     id: i,
+//                     title: `${category === 'electronics' ? '电子产品' : category === 'clothing' ? '服装' : '书籍'} ${i}`,
+//                     price: Math.floor(Math.random() * 1000),
+//                     category: category,
+//                     image: 'https://via.placeholder.com/150'
+//                 };
+//
+//                 // 修改点击事件为弹窗显示
+//                 product.onclick = () => {
+//                     alert(`商品信息：
+// 标题：${productData.title}
+// 价格：$${productData.price}
+// 分类：${productData.category === 'electronics' ? '电子产品' :
+//                    productData.category === 'clothing' ? '服装' : '书籍'}`);
+//                 };
+//
+//                 product.innerHTML = `
+//                     <img src="${productData.image}" alt="Product ${i}">
+//                     <h3>${productData.title}</h3>
+//                     <p>价格: $${productData.price}</p>
+//                 `;
+//
+//                 productList.appendChild(product);
+//             }
+            // 替换原有的商品列表生成代码
+            async function loadProducts(query) {
+                const productList = document.getElementById('productList');
+                productList.innerHTML = ''; // 清空现有内容
 
-            // 在 DOMContentLoaded 事件处理函数中添加
-            const productList = document.getElementById('productList');
-            productList.innerHTML = ''; // 清空现有内容
-            
-            // 生成12个商品
-            const categories = ['electronics', 'clothing', 'books'];
-            for (let i = 1; i <= 12; i++) {
-                const category = categories[Math.floor(Math.random() * categories.length)];
-                const product = document.createElement('div');
-                product.className = 'product-item';
-                product.setAttribute('data-category', category);
-                
-                // 生成商品数据
-                const productData = {
-                    id: i,
-                    title: `${category === 'electronics' ? '电子产品' : category === 'clothing' ? '服装' : '书籍'} ${i}`,
-                    price: Math.floor(Math.random() * 1000),
-                    category: category,
-                    image: 'https://via.placeholder.com/150'
-                };
-                
-                // 修改点击事件为弹窗显示
-                product.onclick = () => {
-                    alert(`商品信息：
-标题：${productData.title}
-价格：$${productData.price}
-分类：${productData.category === 'electronics' ? '电子产品' : 
-                   productData.category === 'clothing' ? '服装' : '书籍'}`);
-                };
-                
-                product.innerHTML = `
-                    <img src="${productData.image}" alt="Product ${i}">
-                    <h3>${productData.title}</h3>
-                    <p>价格: $${productData.price}</p>
-                `;
-                
-                productList.appendChild(product);
+                try {
+                    const response = await fetch('http://apijson.cn:8080/get', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "[]": {
+                                "count": 20,
+                                "page": 0,
+                                "Moment": {
+                                    "@column": "id,userId,content",
+                                    "content%$": query == null || query == "" ? null : query
+                                },
+                                "User": {
+                                    "id@": "/Moment/userId",
+                                    "@column": "id,name,head"
+                                }
+                            }
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok && data['[]']) {
+                        data['[]'].forEach(item => {
+                            const product = document.createElement('div');
+                            product.className = 'product-item';
+
+                            // 使用 Moment 和 User 数据构建商品展示
+                            const productData = {
+                                id: item.Moment.id,
+                                title: item.User.name,
+                                content: item.Moment.content,
+                                image: item.User.head
+                            };
+
+                            // 点击事件显示详情
+                            product.onclick = () => {
+                                async function loadProduct(id) {
+                                    try {
+                                        const response2 = await fetch('http://apijson.cn:8080/get', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                    "Moment": {
+                                                        "id": id
+                                                    },
+                                                    "User": {
+                                                        "id@": "/Moment/userId",
+                                                        "@column": "id,name,head"
+                                                    }
+                                            })
+                                        });
+
+                                        const data2 = await response2.json();
+
+                                        if (data2.ok) {
+                                            var moment = data2.Moment || {};
+                                            var user = data2.User || {};
+                                            alert(`商品信息：
+                                                ID：${moment.id}
+                                                发布者：${user.name}
+                                                内容：${moment.content}
+                                                日期：${moment.date}`
+                                            );
+                                        }
+                                   } catch (error) {
+                                        console.error('Failed to load product:', error);
+                                    }
+                                }
+
+                                loadProduct(productData.id);
+                            };
+
+                            product.innerHTML = `
+                                <img src="${productData.image}" alt="User ${productData.id}">
+                                <h3>${productData.title}</h3>
+                                <p>${productData.content}</p>
+                            `;
+
+                            productList.appendChild(product);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Failed to load products:', error);
+                    productList.innerHTML = '<div class="error">Failed to load products</div>';
+                }
             }
+
+            // 页面加载完成后调用
+            // document.addEventListener('DOMContentLoaded', loadProducts);
+            loadProducts();
         });
 
         function showProductDetail(id) {

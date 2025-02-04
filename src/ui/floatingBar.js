@@ -76,8 +76,21 @@ class FloatingUI {
         playBtn.textContent = 'Play';
         playBtn.className = 'play-btn';
         playBtn.onclick = async () => {
-            if (window.uigoRecorder && this.selectedRecording) {
+            if (!window.uigoRecorder || !this.selectedRecording) return;
+            
+            if (window.uigoRecorder.isPlaying) {
+                console.log('Already playing...');
+                return;
+            }
+            
+            playBtn.disabled = true;
+            playBtn.textContent = 'Playing...';
+            
+            try {
                 await window.uigoRecorder.playRecording(this.selectedRecording);
+            } finally {
+                playBtn.disabled = false;
+                playBtn.textContent = 'Play';
             }
         };
         
@@ -298,9 +311,9 @@ class FloatingUI {
             alert('Please select a recording first');
             return;
         }
-        this.updateStepsList(this.selectedRecording.events);
-        if (window.uigoRecorder) {
-            window.uigoRecorder.playRecording(this.selectedRecording);
+        
+        if (window.uigoRecorder && !window.uigoRecorder.isPlaying) {
+            window.uigoRecorder.playRecording(this.selectedRecording.events);
         }
     }
 } 

@@ -1,10 +1,11 @@
 class UIRecorder {
     constructor() {
         this.recording = false;
+        this.isPlaying = false;
         this.events = [];
         this.httpEvents = [];
         this.elementFinder = new ElementFinder();
-        this.httpInterceptor = new HttpInterceptor();
+        this.httpInterceptor = new HttpInterceptor(this);
         this.editableElements = new Map();
         this.scanElements();
     }
@@ -30,11 +31,13 @@ class UIRecorder {
 
     start() {
         this.recording = true;
+        this.httpInterceptor.start();
         this.setupEventListeners();
     }
 
     stop() {
         this.recording = false;
+        this.httpInterceptor.stop();
         this.removeEventListeners();
     }
 
@@ -58,7 +61,7 @@ class UIRecorder {
     }
 
     handleEvent(event) {
-        if (!this.recording) return;
+        if (!this.recording || this.isPlaying) return;
 
         const target = event.target;
         const properties = this.elementFinder.getElementProperties(target);
@@ -142,9 +145,16 @@ class UIRecorder {
     }
 
     async playRecording(recording) {
-        const events = recording.events;
-        for (let event of events) {
-            await this.playEvent(event);
+        if (this.isPlaying) return;
+        
+        try {
+            this.isPlaying = true;
+            const events = recording.events;
+            for (let event of events) {
+                await this.playEvent(event);
+            }
+        } finally {
+            this.isPlaying = false;
         }
     }
 
@@ -153,13 +163,20 @@ class UIRecorder {
             console.error('Invalid event or missing xpath:', event);
             return;
         }
-        
+    
+        if (event.type === 'fetch') {
+            // Simulate waiting for HTTP response
+            console.log(`Waiting for HTTP response: ${event.method} ${event.url}`);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+            return;
+        }
+    
         const element = this.elementFinder.findElementByXPath(event.xpath);
         if (!element) {
             console.error('Element not found:', event.xpath);
             return;
         }
-
+    
         try {
             switch (event.type) {
                 case 'click':
@@ -187,8 +204,8 @@ class UIRecorder {
         } catch (error) {
             console.error('Error playing event:', error, event);
         }
-
-        // 添加延迟以模拟真实操作间隔
+    
+        // Add delay to simulate real user interaction
         await new Promise(resolve => setTimeout(resolve, 500));
     }
 
@@ -239,7 +256,7 @@ class UIRecorder {
     }
 
     handleInputEvent(event) {
-        if (!this.recording) return;
+        if (!this.recording || this.isPlaying || event.isTrusted === false) return;
         const target = event.target;
         
         if (!['INPUT', 'TEXTAREA'].includes(target.tagName)) return;
@@ -263,7 +280,7 @@ class UIRecorder {
     }
 
     handleChangeEvent(event) {
-        if (!this.recording) return;
+        if (!this.recording || this.isPlaying || event.isTrusted === false) return;
         const target = event.target;
         
         if (!['SELECT'].includes(target.tagName)) return;
@@ -317,5 +334,14 @@ class UIRecorder {
         }
         
         return zIndex;
+    }
+
+    recordHttpEvent(event) {
+        if (this.recording) {
+            this.httpEvents.push(event);
+            if (window.uigoUI) {
+                window.uigoUI.updateStepsList(this.events);
+            }
+        }
     }
 } 

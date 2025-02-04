@@ -1,5 +1,6 @@
 class HttpInterceptor {
-    constructor() {
+    constructor(recorder) {
+        this.recorder = recorder;
         this.events = [];
         this.setupXHRInterceptor();
         this.setupFetchInterceptor();
@@ -46,26 +47,54 @@ class HttpInterceptor {
         const originalFetch = window.fetch;
         const self = this;
 
-        window.fetch = function() {
+        window.fetch = async (...args) => {
             const start = Date.now();
-            return originalFetch.apply(this, arguments)
-                .then(async response => {
-                    const clone = response.clone();
-                    const responseData = await clone.text();
+            alert("start fetch " + start.toLocaleString())
+            const response = await originalFetch(...args);
+            this.recorder.recordHttpEvent({
+                type: 'fetch',
+                method: args[0].method || 'GET',
+                url: args[0].url || args[0],
+                status: response.status
+            });
+            const clone = response.clone();
+            const responseData = await clone.text();
 
-                    self.events.push({
-                        type: 'fetch',
-                        url: response.url,
-                        method: arguments[0].method || 'GET',
-                        request: arguments[0].body,
-                        response: responseData,
-                        status: response.status,
-                        timestamp: start,
-                        duration: Date.now() - start
-                    });
+            var event = {
+                type: 'fetch',
+                url: response.url,
+                method: args[0].method || 'GET',
+                request: args[0].body,
+                response: responseData,
+                status: response.status,
+                timestamp: start,
+                duration: Date.now() - start
+            }
 
-                    return response;
-                });
+            alert("end fetch event = \n" + JSON.stringify(event))
+            self.events.push(event);
+
+            return response;
         };
     }
+
+    start() {
+        const originalFetch = window.fetch;
+        window.fetch = async (...args) => {
+            const response = await originalFetch(...args);
+            this.recorder.recordHttpEvent({
+                type: 'fetch',
+                method: args[0].method || 'GET',
+                url: args[0].url || args[0],
+                status: response.status
+            });
+            return response;
+        };
+    }
+
+    stop() {
+        // Restore original fetch if needed
+    }
+
+    
 } 
